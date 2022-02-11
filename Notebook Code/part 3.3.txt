@@ -1,0 +1,46 @@
+# Spending efficiency 
+
+# we will use the previouse  expected_out_put For This Calculations as  the efficiency = actual - expected 
+# Using the Winning Precentage 
+Efficieny = total_winning - expected_out_put 
+# Now Scatter The Efficiency Of Each Team Over the Years From 1985 to 2014 
+# first We Will Choose Some Teams To Plot let's Say -> OAK , BOS, NYA and ATL   
+for team_name in ["OAK", "BOS", "NYA", "ATL"]:
+    # first get Team Frame 
+    team_frame = sql_frame.loc[sql_frame["teamID"] == team_name] 
+    payllor_array = np.array(team_frame["payroll"]) 
+    payllor_year_mean = team_frame["payroll"].mean() 
+    payllor_year_standard = team_frame["payroll"].std()  
+    # Apply the First Equation 
+    standard_payllor = (payllor_array - payllor_year_mean) / payllor_year_standard 
+    # Get the expected Winning Precentage  
+    expected_winning = standard_payllor * 2.5 + 50 
+    # get Winning Precentage 
+    winning_precentage_array = np.array(team_frame["win_percentage"])  
+    efficiency = winning_precentage_array - expected_winning 
+    # This to avoid Error If there Is Missing in the Data 
+    for i in range(len(efficiency), 2014 - 1985 + 1): 
+        efficiency = np.append(efficiency, 0) 
+    # using the Same Array -> Years To plot the data  
+    plt.plot(years, efficiency, "-o", label=team_name) 
+plt.legend() 
+plt.xlabel("Years", fontsize=15) 
+plt.ylabel("Efficiency", fontsize=15) 
+plt.title("Efficiency  of Each Team Through Years") 
+plt.show() 
+
+############################################### the Answer Of the Qeustion ########################################## 
+#From this set of plots we can learn why the Oakland A’s were a 
+#truely smart team and ahead of their time. As we can see from the 
+#first graph ploted above ), “winning efficienct of teams over time seemed to 
+#increase to an all time high in and then plateaued . 
+#that over time, money seemed to have a high level of influence on how well a team would do. 
+# In particular, as time went by, the regression line of payroll and winning percentage of 
+# teams emmerged and we came to the conclusion in our regression line of all teams across all years 
+#  that a team is predicted to win more than half of their games if they 
+# spend more than average amount of payroll for their teams. Oakland is considered an 
+# interesting team because they are an outlier to this trend. At least in their money ball period, 
+# if we look at the time period from , we see that Oakland became more efficient 
+# than any other team (. This means that they 
+# were able to outperform in their games won (winning percentage) based off of their team payrolls.
+#Based off of what they were paying, they were winning way more games than expected.

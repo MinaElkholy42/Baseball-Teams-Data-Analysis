@@ -1,0 +1,15 @@
+# This Part we want to plot ALL Payrolls For ALL Yeasrs For ALL Teams so we will 
+list_total_payroll_years = []
+for year_number in np.arange(1990, 2015): 
+    # Get the payroll For the Selected Years For all Teams 
+    year_frame = plot_frame.loc[(plot_frame["yearID"] == year_number)]
+    # Get the Sum of all payrolls in this year 
+    total_payroll = sum(year_frame["payroll"]) 
+    # Append the Result to the List for plotting 
+    list_total_payroll_years.append(total_payroll)
+# Now We Want To Plot  the Graph  
+plt.scatter(np.arange(1990, 2015), list_total_payroll_years, color="black") 
+plt.xlabel("Years", fontsize=18) 
+plt.ylabel("Total Payroll", fontsize=18) 
+plt.show()
+#######################################################################################

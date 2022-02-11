@@ -1,0 +1,38 @@
+# Expected wins  
+# Make Total Listst First 
+total_standard_paylor = np.array([]) 
+total_winning = np.array([])
+# First We need To Make Scatter For ALL Standarized Payroll with all Years And the Winning Precentage Data 
+for year_number in years:
+    # Take The Frame For This Year Only 
+    year_frame = sql_frame.loc[sql_frame["yearID"] == year_number] 
+    # For Each Year Get the List Of Payrolls, Mean Of Payrolls 
+    # and Standard Deviasion of Payroll
+    payllor_array = np.array(year_frame["payroll"]) 
+    payllor_year_mean = year_frame["payroll"].mean() 
+    payllor_year_standard = year_frame["payroll"].std()  
+    # Apply the First Equation 
+    standard_payllor = (payllor_array - payllor_year_mean) / payllor_year_standard 
+    # Get the Winning Precentage  
+    winning_precentage_array = np.array(year_frame["win_percentage"]) 
+    # Append Data To the Total Lsitst To Scatter Later  
+    total_standard_paylor = np.append(total_standard_paylor, standard_payllor)
+    total_winning = np.append(total_winning, winning_precentage_array)
+
+plt.scatter(np.array(total_standard_paylor), np.array(total_winning)) 
+plt.title("Scatter For All Teams Standard Payroll With the Winning Precentage") 
+plt.xlabel("Standardized Payroll")
+plt.ylabel("Winning Precentage")
+plt.show()  
+
+# Calculate epected Out Put Using the Equation 
+expected_out_put = total_standard_paylor * 2.5 + 50 
+plt.scatter(np.array(total_standard_paylor), np.array(total_winning)) 
+plt.plot(total_standard_paylor, expected_out_put, color="red")
+plt.title("Scatter For All Teams Standard Payroll With the Winning Precentage") 
+plt.xlabel("Standardized Payroll")
+plt.ylabel("Winning Precentage")
+plt.show()  
+################################################ COnclusion ########################################################## 
+# \team where to spend the average amount of payroll relative to the 
+# other teams in the league, they would likely  win about 50% of their games.

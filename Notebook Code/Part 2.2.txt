@@ -1,0 +1,73 @@
+# Correlation between payroll and winning percentag 
+
+# First We need To SPlit the Years To 5 Peroids  (The Total number of Years is 29 Year) 
+# so we generate array of 2d (Rows = 5 and Colums = Number of Years In each Interval) 
+interval_years = 6 # (2014 - 1985 + 1) / 5 = (6) the Last Year is not included in the interval 
+Periods = 5 # The number of periods 
+# Make Intiazliation for the 2D Array 
+peroids_arr = np.array([])
+# loop  to make 2d array 
+for year_number in range(1985, 2015): 
+    # Add the number of year to the array 
+    peroids_arr = np.append(peroids_arr, year_number).astype(int) # As Type Integer 
+# Reshape the array to be (Each Interval Has 6 Years From 1985 to 2014)
+peroids_arr = peroids_arr.reshape(Periods, interval_years) 
+# print(peroids_arr) 
+# Now Loop On each Interval  
+for interval in peroids_arr: 
+    #  make two lists one for the mean of payroll and one for the mean of winning precentage  
+    payroll_list = [] 
+    winnning_precentage_list = []  
+    # loop on each year in the Interval 
+    for year in interval: 
+        # get Slice of data frame (the Whole Data Frame Sql Frame) with respect to the year 
+        year_frame = sql_frame.loc[sql_frame["yearID"] == year] 
+        payroll_list.append(year_frame["payroll"].mean())  # Add Payroll Mean 
+        winnning_precentage_list.append(year_frame["win_percentage"].mean())  # add winning precentage Mean 
+    # Now Plot the Data We Had Collect 
+    plt.plot(np.array(payroll_list), np.array(winnning_precentage_list), "-o", color="red")  
+    plt.title(str(interval[0]) + " - " + str(interval[len(interval) - 1]), fontsize=20)
+    plt.xlabel("Average Payroll", fontsize=15) 
+    plt.ylabel("Avergae Winning Precentage", fontsize=15)
+    plt.show() 
+    
+################################################## The Comment #####################################################
+#  the spread of the average payroll increases as more teams are paying their players more and years  
+# spending more money on players is more likely to result in a team winning more games 
+# Yes The More some teams Pays For Players The Moroe the Winning Precentage Increase Result in the Winning More Games 
+
+
+
+# FOR OAK TEAM   Repeate the Same Code But Only For This Team Not ALL The Team 
+print("##################################### OKA TEAM ################################################")  
+
+################################################### Commnet ##########################################
+# A's spending efficiency across these periods for oka tem comparing to the other team unitll 2014 is better than 
+# the other team which get them the efficiecny to be Most likely in the Winning Precentage And better than 
+# the other teams 
+# How Ever My Be After This be Less than That  
+###################################################################################################################
+for interval in peroids_arr: 
+    #  make two lists one for the mean of payroll and one for the mean of winning precentage  
+    payroll_list = [] 
+    winnning_precentage_list = []   
+    # Make Two Lists For the OAK Team 
+    oak_payroll = [] 
+    oak_winning_precentage = []
+    # loop on each year in the Interval 
+    for year in interval: 
+        # get Slice of data frame (the Whole Data Frame Sql Frame) with respect to the year all ExCept the OAK 
+        year_frame = sql_frame.loc[(sql_frame["yearID"] == year) & (sql_frame["teamID"] != "OAK")] 
+        payroll_list.append(year_frame["payroll"].mean())  # Add Payroll Mean 
+        winnning_precentage_list.append(year_frame["win_percentage"].mean())  # add winning precentage Mean  
+        ########## FOR OAK ###############  
+        oak_frame = sql_frame.loc[(sql_frame["yearID"] == year) & (sql_frame["teamID"] == "OAK")]
+        oak_payroll.append(oak_frame["payroll"].mean()) 
+        oak_winning_precentage.append(oak_frame["win_percentage"].mean())
+    # Now Plot the Data We Had Collect 
+    plt.plot(np.array(payroll_list), np.array(winnning_precentage_list), "-o", color="red")   
+    plt.plot(np.array(oak_payroll), np.array(oak_winning_precentage), "-x", color="blue")
+    plt.title(str(interval[0]) + " - " + str(interval[len(interval) - 1]), fontsize=20)
+    plt.xlabel("Average Payroll", fontsize=15) 
+    plt.ylabel("Avergae Winning Precentage", fontsize=15)
+    plt.show() 

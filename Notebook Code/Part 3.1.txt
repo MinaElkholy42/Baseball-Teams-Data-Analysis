@@ -1,0 +1,31 @@
+# PART THREE: Data Transformations 
+# Standardizing across year 
+
+# First Make A List Containg All Years From 1985 to 2014 
+years = np.arange(1985, 2015) 
+# loop on the years to apply the equation std_payllor = (payllor - average_paylor) / standad_deviation_of_payllor 
+for year_number in years:
+    # Take The Frame For This Year Only 
+    year_frame = sql_frame.loc[sql_frame["yearID"] == year_number] 
+    # For Each Year Get the List Of Payrolls, Mean Of Payrolls 
+    # and Standard Deviasion of Payroll
+    payllor_array = np.array(year_frame["payroll"]) 
+    payllor_year_mean = year_frame["payroll"].mean() 
+    payllor_year_standard = year_frame["payroll"].std()  
+    # Apply the First Equation 
+    standard_payllor = (payllor_array - payllor_year_mean) / payllor_year_standard 
+    # Get the Winning Precentage  
+    winning_precentage_array = np.array(year_frame["win_percentage"]) 
+    # Now Plot the Data  
+    plt.plot(standard_payllor, winning_precentage_array, "-o", color="red")  
+    plt.title("Plot To Show standardized Payroll\nWith Winning Precentage For Each Year\n This For Year : " + str(year_number),
+              fontsize=15)
+    plt.xlabel("(standardized) payroll ", fontsize=15)
+    plt.ylabel("winning percentage", fontsize=15)
+    plt.show() 
+################################################# DISCUSSION ####################################################
+# The Plots Before Transformation : ->  ALL the teams In the diffrent Ranges of Years 
+# Have Diffrent Means (Centres In Each Year) and Diffrent Standard Devission So It's Difficult TO Compare From the Plots 
+# Afeter Transformation All Have the Same Normal Scale (Mean 0 and STandard With 1 value) So 
+# It Was Easy To Compare Them  
+############################################### DISCUSSION #####################################################

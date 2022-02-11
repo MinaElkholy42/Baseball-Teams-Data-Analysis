@@ -1,0 +1,104 @@
+def make_payroll_complete(arr):
+    for i in range(len(arr), (2014 - 1990 + 1)):
+        arr = np.append(arr, 0)
+    return arr
+# PART TWO: Exploratory Data Analysis  
+# First We Need To Get the Names of Teams (Team ID) with out repetition (Unique For Each One) 
+
+# Payroll distribution 
+###################################
+teams_id_list = [] 
+# Loop on the list of tuples and get the names of the teams 
+for data in rows:
+    # If the Team Not Exists in the list (Unique one)
+    if data[0] not in teams_id_list:
+        teams_id_list.append(data[0])
+# print(len(teams_id_list)) 
+# We see that The number of teams is 35 Team so we need to plot a figure with 35 Plots inside it 
+
+# First Create Pandas Data Frame From the List of Tuples We get In PART ONE 
+sql_frame = pd.DataFrame(rows, columns =["teamID" , "yearID", "lgID" ,  "payroll", 
+                                         "franchID",   "Rank"  ,"W" , "G" , "win_percentage"])
+# print(sql_frame) 
+# Now We Need To Get the chunck Of the Data Frame Where The year Lay out in the Interval of  [1990, 2014]  
+plot_frame = sql_frame.loc[(sql_frame["yearID"]>=1990) & (sql_frame["yearID"]<=2014)] 
+# print(plot_frame) 
+# We Want the Years From 1990 to 2014 (in code 2015) 
+year_arr = np.arange(1990, 2015)
+# Now Loop On each Team 
+for team_name in teams_id_list:  
+    # Get Slice Of the data Frame For Only This Team  (All Years With All payroll) 
+    team_frame = plot_frame.loc[(plot_frame["teamID"] == team_name)]  
+    # From Each Data Frame Take the Years And payroll  values  
+    payroll_arr = np.array(team_frame["payroll"])   
+    # Here There is some Error That My The Information of payroll over Years Is missing so we want to make it to 0  
+    # Make This Function Call To Finish the Jop
+    payroll_arr = make_payroll_complete(payroll_arr)
+    # Now Plot the Graph For Each Team 
+    plt.plot(year_arr, payroll_arr, "-o")  
+    # Give Each Plot The Name Of the Axis and the Title 
+    plt.title("Team ID : " + team_name)
+    plt.xlabel("Years", fontsize=20)
+    plt.ylabel("payroll", fontsize=20) 
+    plt.show()
+    print("\n\n")
+
+############################################## Comment On the PLots ##################################### 
+# The Data Set Have Information About the Payrools In Descrete Years So it's All vertical Data 
+# average payrolls of teams are increasing over time 
+# the spread of the payroll of the teams increases among the other teams with respsect to time 
+# Some teams become much more wealthier than the others  
+# The Central Tendecy Seems To Be COnstant With All Plots  
+# (central tendency) of baseball teams in a given year has almost always increased as time goes on. On average, 
+# a team payroll is more in an given year than from the year before.
+#################################################################################################################### 
+
+#################################################### EVIDEINCE ######################################################
+# The Evidnce Form the Last Two Graphs Of
+# First One is : Average Payrol and Years 
+# Second one is : Diffrence Of Average Payroll and Years 
+# Note ALL YEARS 
+#################################################################################################################### 
+
+# First Graph X_axis is years and Y_axis is Average Payroll For Each Team 
+
+
+
+year_mean_payroll = np.arange(1985, 2015) # To 2014 (End - 1)
+# first make List of the Mean Of Each year for all teams  
+list_of_means = []
+for i in year_mean_payroll:  
+    # Get Slice Of the data Frame For Only This year  (All teams With All payroll) 
+    year_frame = sql_frame.loc[(sql_frame["yearID"] == i)]   
+    # Get Mean Of Payroll and Add It To the list  
+    list_of_means.append(year_frame["payroll"].mean())
+    
+# Now Plot the Graph For Each Team  
+plt.plot(year_mean_payroll, np.array(list_of_means),  "-o", color="red")  
+# Give Each Plot The Name Of the Axis and the Title 
+plt.title("Average Payroll With Respect To Years", fontsize=18)
+plt.xlabel("Years", fontsize=20)
+plt.ylabel("Mean payroll For Each year", fontsize=20) 
+plt.show()
+print("\n\n")
+
+
+# Second Graph ->  (Max - Min) Of Payroll Of Each Year With Respect To Time 
+
+# first make List of the Mean Of Each year for all teams  
+list_of_diffrencies = []
+for i in year_mean_payroll:  
+    # Get Slice Of the data Frame For Only This year  (All teams With All payroll) 
+    year_frame = sql_frame.loc[(sql_frame["yearID"] == i)]   
+    # Get Max - min (Rich - Poor of Teams) Of Payroll and Add It To the list  
+    list_of_diffrencies.append(year_frame["payroll"].max() - year_frame["payroll"].min())
+    
+# Now Plot the Graph For Each Team  
+plt.plot(year_mean_payroll, np.array(list_of_diffrencies),  "-o", color="red")  
+# Give Each Plot The Name Of the Axis and the Title 
+plt.title("Diffrence of  Payroll With Respect To Years", fontsize=18)
+plt.xlabel("Years", fontsize=20)
+plt.ylabel("Diffrence of  payroll For Each year", fontsize=20) 
+plt.show()
+print("\n\n") 
+###########The richest teams likely had to pay less to their players because the economy was doing poorly.######

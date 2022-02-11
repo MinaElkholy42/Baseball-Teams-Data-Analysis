@@ -1,0 +1,44 @@
+# Include the Library Of SQL Lite and The Errors of SQLlite 3 (To Make the Debug More Flexible)
+import sqlite3    
+import numpy as np
+import pandas as pd 
+import matplotlib.pyplot as plt
+from sqlite3 import Error 
+# PART ONE: Data Wrangling 
+# First We Will Make the Connection to The Data Base Using the SQLLite 3 in python 
+lahman_con = sqlite3.connect("lahman2014.sqlite")  
+# Define the Query We Will Use in the  Task  
+
+# The First Qeury -> total_payroll (New Table)
+# the query -> Group By (Team Id and Year ID ) This Beacuse Of Each Team Group By Each Team the Salary Which is 
+# total_payroll variable 
+
+# For Each Player : Note That 
+# all the players who played on a specific team and on a specific year and summing their individual salaries 
+# to get a total payroll 
+
+# the Second Qeury 
+# we Select Some of the Columns we will Use in the Analysis which are :->  
+#  lgID (league), teamID, yearID, payroll, franchID, rank, W (games Won), G (Games played), and win_percentage
+# Calculate the Win Precentage as new varaible using -> (Win Games / Total Games) * 100
+# Multiply the win games by 1.0 for casting to double  
+
+
+query = "with total_payroll as (SELECT teamID, yearID, sum(salary) as payroll FROM Salaries GROUP BY teamID, yearID) SELECT Teams.teamID, Teams.yearID, Teams.lgID, payroll, franchID, rank, W,G, ((W*1.0/G)*100) as win_percentage FROM total_payroll, Teams WHERE total_payroll.yearID = Teams.yearID and total_payroll.teamID = Teams.teamID"
+
+########################################### ABOUT MISSING DATA################################################33
+# For the Missing Data Note That : 
+# the inner join between Two Tables (Teams and the new one Total_payroll) with  (The Same Year and Team ID) and thterfore the team must have 
+# At least one Player with salary Information Exists any other Missing in all Infromation about the whole Team 
+# Is Ignored 
+#################################################################################################################################
+# Make the Cursor For Excuting the query 
+cur = lahman_con.cursor()
+# Excute the Query 
+cur.execute(query)
+# Get the Out Put (Feach the out Put (List Of Tuples))
+rows = cur.fetchall() 
+# Loop On each Row (Tuble in the out put and print it q) 
+print("teamID yearID  lgID  payroll franchID  Rank  W   G  win_percentage")
+for r in rows:
+    print(r, "\n")
